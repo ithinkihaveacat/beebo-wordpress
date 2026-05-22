@@ -16,18 +16,18 @@ _deprecated_file(
 );
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
+<html <?php language_attributes(); ?>>
 <head>
-<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="profile" href="https://gmpg.org/xfn/11" />
 <meta http-equiv="Content-Type" content="<?php bloginfo( 'html_type' ); ?>; charset=<?php bloginfo( 'charset' ); ?>" />
 
 <title><?php echo wp_get_document_title(); ?></title>
 
-<link rel="stylesheet" href="<?php bloginfo( 'stylesheet_url' ); ?>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php bloginfo( 'stylesheet_url' ); ?>" media="screen" />
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
 
 <?php if ( file_exists( get_stylesheet_directory() . '/images/kubrickbgwide.jpg' ) ) { ?>
-<style type="text/css" media="screen">
+<style media="screen">
 
 	<?php
 	// Checks to see whether it needs a sidebar.
@@ -43,7 +43,8 @@ _deprecated_file(
 
 <?php
 if ( is_singular() ) {
-	wp_enqueue_script( 'comment-reply' );}
+	wp_enqueue_script( 'comment-reply' );
+}
 ?>
 
 <?php wp_head(); ?>

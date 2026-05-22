@@ -8,13 +8,14 @@
  * @subpackage Twenty_Fourteen
  * @since Twenty Fourteen 1.0
  */
+
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<?php twentyfourteen_post_thumbnail(); ?>
 
 	<header class="entry-header">
-		<?php if ( in_array( 'category', get_object_taxonomies( get_post_type() ) ) && twentyfourteen_categorized_blog() ) : ?>
+		<?php if ( in_array( 'category', get_object_taxonomies( get_post_type() ), true ) && twentyfourteen_categorized_blog() ) : ?>
 		<div class="entry-meta">
 			<span class="cat-links"><?php echo get_the_category_list( _x( ', ', 'Used between list items, there is a space after the comma.', 'twentyfourteen' ) ); ?></span>
 		</div>
@@ -30,7 +31,7 @@
 
 		<div class="entry-meta">
 			<?php
-			if ( 'post' == get_post_type() ) {
+			if ( 'post' === get_post_type() ) {
 				twentyfourteen_posted_on();
 			}
 
@@ -54,7 +55,7 @@
 		<?php
 			the_content(
 				sprintf(
-					/* translators: %s: Post title. */
+					/* translators: %s: Post title. Only visible to screen readers. */
 					__( 'Continue reading %s <span class="meta-nav">&rarr;</span>', 'twentyfourteen' ),
 					the_title( '<span class="screen-reader-text">', '</span>', false )
 				)

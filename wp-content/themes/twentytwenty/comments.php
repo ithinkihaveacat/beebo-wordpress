@@ -23,7 +23,7 @@ if ( $comments ) {
 	<div class="comments" id="comments">
 
 		<?php
-		$comments_number = absint( get_comments_number() );
+		$comments_number = get_comments_number();
 		?>
 
 		<div class="comments-header section-inner small max-percentage">
@@ -85,7 +85,7 @@ if ( $comments ) {
 				}
 				?>
 
-				<nav class="comments-pagination pagination<?php echo $pagination_classes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static output ?>" aria-label="<?php esc_attr_e( 'Comments', 'twentytwenty' ); ?>">
+				<nav class="comments-pagination pagination<?php echo $pagination_classes; ?>" aria-label="<?php esc_attr_e( 'Comments', 'twentytwenty' ); ?>">
 					<?php echo wp_kses_post( $comment_pagination ); ?>
 				</nav>
 

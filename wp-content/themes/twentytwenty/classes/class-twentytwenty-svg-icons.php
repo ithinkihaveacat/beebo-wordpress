@@ -10,14 +10,18 @@
 if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 	/**
 	 * SVG ICONS CLASS
-	 * Retrieve the SVG code for the specified icon. Based on a solution in Twenty Nineteen.
+	 * Retrieves the SVG code for the specified icon. Based on a solution in Twenty Nineteen.
+	 *
+	 * @since Twenty Twenty 1.0
 	 */
 	class TwentyTwenty_SVG_Icons {
 		/**
 		 * GET SVG CODE
-		 * Get the SVG code for the specified icon
+		 * Gets the SVG code for the specified icon.
 		 *
-		 * @param string $icon Icon name.
+		 * @since Twenty Twenty 1.0
+		 *
+		 * @param string $icon  Icon name.
 		 * @param string $group Icon group.
 		 * @param string $color Color.
 		 */
@@ -29,6 +33,30 @@ if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 			} else {
 				$arr = array();
 			}
+
+			/**
+			 * Filters Twenty Twenty's array of icons.
+			 *
+			 * The dynamic portion of the hook name, `$group`, refers to
+			 * the name of the group of icons, either "ui" or "social".
+			 *
+			 * @since Twenty Twenty 1.5
+			 *
+			 * @param array $arr Array of icons.
+			 */
+			$arr = apply_filters( "twentytwenty_svg_icons_{$group}", $arr );
+
+			/**
+			 * Filters an SVG icon's color.
+			 *
+			 * @since Twenty Twenty 1.5
+			 *
+			 * @param string $color The icon color.
+			 * @param string $icon  The icon name.
+			 * @param string $group The icon group.
+			 */
+			$color = apply_filters( 'twentytwenty_svg_icon_color', $color, $icon, $group );
+
 			if ( array_key_exists( $icon, $arr ) ) {
 				$repl = '<svg class="svg-icon" aria-hidden="true" role="img" focusable="false" ';
 				$svg  = preg_replace( '/^<svg /', $repl, trim( $arr[ $icon ] ) ); // Add extra attributes to SVG code.
@@ -45,14 +73,37 @@ if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 		 * GET SOCIAL LINK SVG
 		 * Detects the social network from a URL and returns the SVG code for its icon.
 		 *
+		 * @since Twenty Twenty 1.0
+		 *
 		 * @param string $uri The URL to retrieve SVG for.
 		 */
 		public static function get_social_link_svg( $uri ) {
 			static $regex_map; // Only compute regex map once, for performance.
 			if ( ! isset( $regex_map ) ) {
 				$regex_map = array();
-				$map       = &self::$social_icons_map; // Use reference instead of copy, to save memory.
-				foreach ( array_keys( self::$social_icons ) as $icon ) {
+
+				/**
+				 * Filters Twenty Twenty's array of domain mappings for social icons.
+				 *
+				 * By default, each Icon ID is matched against a .com TLD. To override this behavior,
+				 * specify all the domains it covers (including the .com TLD too, if applicable).
+				 *
+				 * @since Twenty Twenty 1.5
+				 *
+				 * @param array $social_icons_map Array of default social icons.
+				 */
+				$map = apply_filters( 'twentytwenty_social_icons_map', self::$social_icons_map );
+
+				/**
+				 * Filters Twenty Twenty's array of social icons.
+				 *
+				 * @since Twenty Twenty 1.5
+				 *
+				 * @param array $social_icons Array of default social icons.
+				 */
+				$social_icons = apply_filters( 'twentytwenty_svg_icons_social', self::$social_icons );
+
+				foreach ( array_keys( $social_icons ) as $icon ) {
 					$domains            = array_key_exists( $icon, $map ) ? $map[ $icon ] : array( sprintf( '%s.com', $icon ) );
 					$domains            = array_map( 'trim', $domains ); // Remove leading/trailing spaces, to prevent regex from failing to match.
 					$domains            = array_map( 'preg_quote', $domains );
@@ -69,8 +120,9 @@ if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 
 		/**
 		 * ICON STORAGE
-		 * Store the code for all SVGs in an array.
+		 * Stores the code for all SVGs in an array.
 		 *
+		 * @since Twenty Twenty 1.0
 		 * @var array
 		 */
 		public static $ui_icons = array(
@@ -124,6 +176,7 @@ if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 		 * By default, each Icon ID is matched against a .com TLD. To override this behavior,
 		 * specify all the domains it covers (including the .com TLD too, if applicable).
 		 *
+		 * @since Twenty Twenty 1.0
 		 * @var array
 		 */
 		public static $social_icons_map = array(
@@ -152,17 +205,39 @@ if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 			'feed'      => array(
 				'feed',
 			),
+			'google'    => array(
+				'g.page',
+			),
 			'lastfm'    => array(
 				'last.fm',
 			),
 			'mail'      => array(
 				'mailto:',
 			),
+			'mastodon'  => array(
+				'mastodon.social',
+				'pawoo.net',
+				'mstdn.jp',
+				'mastodon.cloud',
+				'mastodon.online',
+				'counter.social',
+				'mstdn.social',
+				'mas.to',
+				'mastodon.world',
+				'gc2.jp',
+			),
 			'pocket'    => array(
 				'getpocket.com',
 			),
+			'tiktok'    => array(
+				'tiktok.com',
+			),
 			'twitch'    => array(
 				'twitch.tv',
+			),
+			'whatsapp'  => array(
+				'wa.me',
+				'whatsapp.com',
 			),
 			'wordpress' => array(
 				'wordpress.com',
@@ -173,6 +248,7 @@ if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 		/**
 		 * Social Icons – svg sources.
 		 *
+		 * @since Twenty Twenty 1.0
 		 * @var array
 		 */
 		public static $social_icons = array(
@@ -238,6 +314,8 @@ if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 
 			'tumblr'     => '<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M16.749,17.396c-0.357,0.17-1.041,0.319-1.551,0.332c-1.539,0.041-1.837-1.081-1.85-1.896V9.847h3.861V6.937h-3.847V2.039 c0,0-2.77,0-2.817,0c-0.046,0-0.127,0.041-0.138,0.144c-0.165,1.499-0.867,4.13-3.783,5.181v2.484h1.945v6.282 c0,2.151,1.587,5.206,5.775,5.135c1.413-0.024,2.982-0.616,3.329-1.126L16.749,17.396z"></path></svg>',
 
+			'tiktok'     => '<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M22.601273,3.99398422 C22.3543419,3.81786432 22.035286,3.77722295 21.7519316,3.88579503 C20.7673827,4.3053476 19.6367473,4.19781761 18.749359,3.60023293 C17.8619707,3.00264826 17.3390468,1.99663905 17.3606558,0.92862387 C17.366873,0.687165991 17.2757319,0.453316101 17.1076605,0.279488738 C16.937965,0.101864383 16.7030375,0.000936521363 16.4571011,0 L12.8428824,0 C12.343863,0 11.9393277,0.403649581 11.9393277,0.901576573 L11.9393277,16.3365675 C11.9393277,17.581385 10.9279897,18.5905089 9.68044104,18.5905089 C8.43289237,18.5905089 7.42155434,17.581385 7.42155434,16.3365675 C7.42155434,15.09175 8.43289237,14.0826261 9.68044104,14.0826261 C10.1794605,14.0826261 10.5839957,13.6789765 10.5839957,13.1810495 L10.5839957,9.57474321 C10.5839957,9.07681622 10.1794605,8.67316663 9.68044104,8.67316663 C5.44083962,8.67813472 2.00520525,12.1062476 2.00022626,16.3365675 C1.98771579,17.9546233 2.49430163,19.5342383 3.44591375,20.8444504 C3.61458557,21.0808398 5.05966461,19.9481604 4.91870788,19.7535427 C4.19555103,18.760421 3.80646351,17.5641499 3.80733562,16.3365675 C3.81165144,13.4484211 5.91803869,10.991254 8.77688636,10.5394301 L8.77688636,12.3425833 C6.70706914,12.8134053 5.34862709,14.7938709 5.65804701,16.8895228 C5.96746693,18.9851748 7.84059425,20.4905907 9.95854931,20.3457987 C12.0765044,20.2010067 13.7263573,18.4547454 13.7464371,16.3365675 L13.7464371,1.80315315 L15.6167953,1.80315315 C16.0103639,4.20249558 18.0864975,5.96506252 20.5230972,5.96843692 C20.7496837,5.96688212 20.975975,5.95182905 21.2007632,5.92335809 L21.2007632,7.67241664 C19.7293748,7.92650626 18.2152284,7.66195137 16.917914,6.92410808 C16.6383532,6.76305694 16.2939201,6.76305694 16.0143593,6.92410808 C15.7336844,7.0857977 15.5612953,7.38509793 15.562582,7.7084797 L15.562582,16.3365675 C15.5580692,18.2941869 14.5756972,20.1206948 12.9432814,21.2065896 C11.9060301,21.8965766 10.6930991,22.229824 9.48148608,22.189012 C8.78627447,22.1655944 8.08246121,22.0477035 7.42155434,21.774707 C7.12504167,21.5395062 5.484375,20.8444504 4.91870788,19.7535427 C4.66351437,19.2613936 3.0238563,20.6306805 3.44591375,20.8444504 C4.91870788,23.1351563 7.99726562,23.9999684 9.69851213,23.9999684 C13.7074483,23.9999684 17.0406982,20.9190082 17.3606558,16.931608 C17.3657425,16.8836579 17.3657425,16.8353059 17.3606558,16.7873558 L17.3606558,9.10592339 C18.9684136,9.66657941 20.7106733,9.71696914 22.3482777,9.25017564 C22.7469793,9.13449784 23.0153499,8.76257691 22.998837,8.34859907 L22.998837,4.7873716 C23.0148813,4.47165088 22.8640303,4.17060935 22.601273,3.99398422 Z" /></svg>',
+
 			'twitch'     => '<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M16.499,8.089h-1.636v4.91h1.636V8.089z M12,8.089h-1.637v4.91H12V8.089z M4.228,3.178L3,6.451v13.092h4.499V22h2.456 l2.454-2.456h3.681L21,14.636V3.178H4.228z M19.364,13.816l-2.864,2.865H12l-2.453,2.453V16.68H5.863V4.814h13.501V13.816z"></path></svg>',
 
 			'twitter'    => '<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M22.23,5.924c-0.736,0.326-1.527,0.547-2.357,0.646c0.847-0.508,1.498-1.312,1.804-2.27 c-0.793,0.47-1.671,0.812-2.606,0.996C18.324,4.498,17.257,4,16.077,4c-2.266,0-4.103,1.837-4.103,4.103 c0,0.322,0.036,0.635,0.106,0.935C8.67,8.867,5.647,7.234,3.623,4.751C3.27,5.357,3.067,6.062,3.067,6.814 c0,1.424,0.724,2.679,1.825,3.415c-0.673-0.021-1.305-0.206-1.859-0.513c0,0.017,0,0.034,0,0.052c0,1.988,1.414,3.647,3.292,4.023 c-0.344,0.094-0.707,0.144-1.081,0.144c-0.264,0-0.521-0.026-0.772-0.074c0.522,1.63,2.038,2.816,3.833,2.85 c-1.404,1.1-3.174,1.756-5.096,1.756c-0.331,0-0.658-0.019-0.979-0.057c1.816,1.164,3.973,1.843,6.29,1.843 c7.547,0,11.675-6.252,11.675-11.675c0-0.178-0.004-0.355-0.012-0.531C20.985,7.47,21.68,6.747,22.23,5.924z"></path></svg>',
@@ -249,7 +327,6 @@ if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 			'whatsapp'   => '<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M16.75,13.96C17,14.09 17.16,14.16 17.21,14.26C17.27,14.37 17.25,14.87 17,15.44C16.8,16 15.76,16.54 15.3,16.56C14.84,16.58 14.83,16.92 12.34,15.83C9.85,14.74 8.35,12.08 8.23,11.91C8.11,11.74 7.27,10.53 7.31,9.3C7.36,8.08 8,7.5 8.26,7.26C8.5,7 8.77,6.97 8.94,7H9.41C9.56,7 9.77,6.94 9.96,7.45L10.65,9.32C10.71,9.45 10.75,9.6 10.66,9.76L10.39,10.17L10,10.59C9.88,10.71 9.74,10.84 9.88,11.09C10,11.35 10.5,12.18 11.2,12.87C12.11,13.75 12.91,14.04 13.15,14.17C13.39,14.31 13.54,14.29 13.69,14.13L14.5,13.19C14.69,12.94 14.85,13 15.08,13.08L16.75,13.96M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C10.03,22 8.2,21.43 6.65,20.45L2,22L3.55,17.35C2.57,15.8 2,13.97 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12C4,13.72 4.54,15.31 5.46,16.61L4.5,19.5L7.39,18.54C8.69,19.46 10.28,20 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z" />
 </svg>',
 
-			// phpcs:disable WordPress.WP.CapitalPDangit.Misspelled
 			'wordpress'  => '<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M12.158,12.786L9.46,20.625c0.806,0.237,1.657,0.366,2.54,0.366c1.047,0,2.051-0.181,2.986-0.51 c-0.024-0.038-0.046-0.079-0.065-0.124L12.158,12.786z M3.009,12c0,3.559,2.068,6.634,5.067,8.092L3.788,8.341 C3.289,9.459,3.009,10.696,3.009,12z M18.069,11.546c0-1.112-0.399-1.881-0.741-2.48c-0.456-0.741-0.883-1.368-0.883-2.109 c0-0.826,0.627-1.596,1.51-1.596c0.04,0,0.078,0.005,0.116,0.007C16.472,3.904,14.34,3.009,12,3.009 c-3.141,0-5.904,1.612-7.512,4.052c0.211,0.007,0.41,0.011,0.579,0.011c0.94,0,2.396-0.114,2.396-0.114 C7.947,6.93,8.004,7.642,7.52,7.699c0,0-0.487,0.057-1.029,0.085l3.274,9.739l1.968-5.901l-1.401-3.838 C9.848,7.756,9.389,7.699,9.389,7.699C8.904,7.67,8.961,6.93,9.446,6.958c0,0,1.484,0.114,2.368,0.114 c0.94,0,2.397-0.114,2.397-0.114c0.485-0.028,0.542,0.684,0.057,0.741c0,0-0.488,0.057-1.029,0.085l3.249,9.665l0.897-2.996 C17.841,13.284,18.069,12.316,18.069,11.546z M19.889,7.686c0.039,0.286,0.06,0.593,0.06,0.924c0,0.912-0.171,1.938-0.684,3.22 l-2.746,7.94c2.673-1.558,4.47-4.454,4.47-7.771C20.991,10.436,20.591,8.967,19.889,7.686z M12,22C6.486,22,2,17.514,2,12 C2,6.486,6.486,2,12,2c5.514,0,10,4.486,10,10C22,17.514,17.514,22,12,22z"></path></svg>',
 
 			'yelp'       => '<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M12.271,16.718v1.417q-.011,3.257-.067,3.4a.707.707,0,0,1-.569.446,4.637,4.637,0,0,1-2.024-.424A4.609,4.609,0,0,1,7.8,20.565a.844.844,0,0,1-.19-.4.692.692,0,0,1,.044-.29,3.181,3.181,0,0,1,.379-.524q.335-.412,2.019-2.409.011,0,.669-.781a.757.757,0,0,1,.44-.274.965.965,0,0,1,.552.039.945.945,0,0,1,.418.324.732.732,0,0,1,.139.468Zm-1.662-2.8a.783.783,0,0,1-.58.781l-1.339.435q-3.067.981-3.257.981a.711.711,0,0,1-.6-.4,2.636,2.636,0,0,1-.19-.836,9.134,9.134,0,0,1,.011-1.857,3.559,3.559,0,0,1,.335-1.389.659.659,0,0,1,.625-.357,22.629,22.629,0,0,1,2.253.859q.781.324,1.283.524l.937.379a.771.771,0,0,1,.4.34A.982.982,0,0,1,10.609,13.917Zm9.213,3.313a4.467,4.467,0,0,1-1.021,1.8,4.559,4.559,0,0,1-1.512,1.417.671.671,0,0,1-.7-.078q-.156-.112-2.052-3.2l-.524-.859a.761.761,0,0,1-.128-.513.957.957,0,0,1,.217-.513.774.774,0,0,1,.926-.29q.011.011,1.327.446,2.264.736,2.7.887a2.082,2.082,0,0,1,.524.229.673.673,0,0,1,.245.68Zm-7.5-7.049q.056,1.137-.6,1.361-.647.19-1.272-.792L6.237,4.08a.7.7,0,0,1,.212-.691,5.788,5.788,0,0,1,2.314-1,5.928,5.928,0,0,1,2.5-.352.681.681,0,0,1,.547.5q.034.2.245,3.407T12.327,10.181Zm7.384,1.2a.679.679,0,0,1-.29.658q-.167.112-3.67.959-.747.167-1.015.257l.011-.022a.769.769,0,0,1-.513-.044.914.914,0,0,1-.413-.357.786.786,0,0,1,0-.971q.011-.011.836-1.137,1.394-1.908,1.673-2.275a2.423,2.423,0,0,1,.379-.435A.7.7,0,0,1,17.435,8a4.482,4.482,0,0,1,1.372,1.489,4.81,4.81,0,0,1,.9,1.868v.034Z"></path></svg>',
@@ -257,6 +334,5 @@ if ( ! class_exists( 'TwentyTwenty_SVG_Icons' ) ) {
 			'youtube'    => '<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M21.8,8.001c0,0-0.195-1.378-0.795-1.985c-0.76-0.797-1.613-0.801-2.004-0.847c-2.799-0.202-6.997-0.202-6.997-0.202 h-0.009c0,0-4.198,0-6.997,0.202C4.608,5.216,3.756,5.22,2.995,6.016C2.395,6.623,2.2,8.001,2.2,8.001S2,9.62,2,11.238v1.517 c0,1.618,0.2,3.237,0.2,3.237s0.195,1.378,0.795,1.985c0.761,0.797,1.76,0.771,2.205,0.855c1.6,0.153,6.8,0.201,6.8,0.201 s4.203-0.006,7.001-0.209c0.391-0.047,1.243-0.051,2.004-0.847c0.6-0.607,0.795-1.985,0.795-1.985s0.2-1.618,0.2-3.237v-1.517 C22,9.62,21.8,8.001,21.8,8.001z M9.935,14.594l-0.001-5.62l5.404,2.82L9.935,14.594z"></path></svg>',
 
 		);
-
 	}
 }

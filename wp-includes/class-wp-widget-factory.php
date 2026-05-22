@@ -13,6 +13,7 @@
  * @since 2.8.0
  * @since 4.4.0 Moved to its own file from wp-includes/widgets.php
  */
+#[AllowDynamicProperties]
 class WP_Widget_Factory {
 
 	/**
@@ -56,7 +57,7 @@ class WP_Widget_Factory {
 	 */
 	public function register( $widget ) {
 		if ( $widget instanceof WP_Widget ) {
-			$this->widgets[ spl_object_hash( $widget ) ] = $widget;
+			$this->widgets[ spl_object_id( $widget ) ] = $widget;
 		} else {
 			$this->widgets[ $widget ] = new $widget();
 		}
@@ -73,7 +74,7 @@ class WP_Widget_Factory {
 	 */
 	public function unregister( $widget ) {
 		if ( $widget instanceof WP_Widget ) {
-			unset( $this->widgets[ spl_object_hash( $widget ) ] );
+			unset( $this->widgets[ spl_object_id( $widget ) ] );
 		} else {
 			unset( $this->widgets[ $widget ] );
 		}
@@ -101,5 +102,40 @@ class WP_Widget_Factory {
 
 			$this->widgets[ $key ]->_register();
 		}
+	}
+
+	/**
+	 * Returns the registered WP_Widget object for the given widget type.
+	 *
+	 * @since 5.8.0
+	 *
+	 * @param string $id_base Widget type ID.
+	 * @return WP_Widget|null
+	 */
+	public function get_widget_object( $id_base ) {
+		$key = $this->get_widget_key( $id_base );
+		if ( '' === $key ) {
+			return null;
+		}
+
+		return $this->widgets[ $key ];
+	}
+
+	/**
+	 * Returns the registered key for the given widget type.
+	 *
+	 * @since 5.8.0
+	 *
+	 * @param string $id_base Widget type ID.
+	 * @return string
+	 */
+	public function get_widget_key( $id_base ) {
+		foreach ( $this->widgets as $key => $widget_object ) {
+			if ( $widget_object->id_base === $id_base ) {
+				return $key;
+			}
+		}
+
+		return '';
 	}
 }

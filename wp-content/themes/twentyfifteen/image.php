@@ -10,7 +10,7 @@
 get_header(); ?>
 
 	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
+		<main id="main" class="site-main">
 
 			<?php
 			// Start the loop.
@@ -35,7 +35,7 @@ get_header(); ?>
 					<div class="entry-attachment">
 						<?php
 							/**
-							 * Filter the default Twenty Fifteen image attachment size.
+							 * Filters the default Twenty Fifteen image attachment size.
 							 *
 							 * @since Twenty Fifteen 1.0
 							 *
@@ -62,6 +62,7 @@ get_header(); ?>
 								'after'       => '</div>',
 								'link_before' => '<span>',
 								'link_after'  => '</span>',
+								/* translators: Hidden accessibility text. */
 								'pagelink'    => '<span class="screen-reader-text">' . __( 'Page', 'twentyfifteen' ) . ' </span>%',
 								'separator'   => '<span class="screen-reader-text">, </span>',
 							)

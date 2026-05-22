@@ -8,7 +8,7 @@
  */
 
 /**
- * Implement Customizer additions and adjustments.
+ * Implements Customizer additions and adjustments.
  *
  * @since Twenty Fourteen 1.0
  *
@@ -95,9 +95,10 @@ function twentyfourteen_customize_register( $wp_customize ) {
 add_action( 'customize_register', 'twentyfourteen_customize_register' );
 
 /**
- * Render the site title for the selective refresh partial.
+ * Renders the site title for the selective refresh partial.
  *
  * @since Twenty Fourteen 1.7
+ *
  * @see twentyfourteen_customize_register()
  *
  * @return void
@@ -107,9 +108,10 @@ function twentyfourteen_customize_partial_blogname() {
 }
 
 /**
- * Render the site tagline for the selective refresh partial.
+ * Renders the site tagline for the selective refresh partial.
  *
  * @since Twenty Fourteen 1.7
+ *
  * @see twentyfourteen_customize_register()
  *
  * @return void
@@ -119,7 +121,7 @@ function twentyfourteen_customize_partial_blogdescription() {
 }
 
 /**
- * Sanitize the Featured Content layout value.
+ * Sanitizes the Featured Content layout value.
  *
  * @since Twenty Fourteen 1.0
  *
@@ -127,7 +129,7 @@ function twentyfourteen_customize_partial_blogdescription() {
  * @return string Filtered layout type (grid|slider).
  */
 function twentyfourteen_sanitize_layout( $layout ) {
-	if ( ! in_array( $layout, array( 'grid', 'slider' ) ) ) {
+	if ( ! in_array( $layout, array( 'grid', 'slider' ), true ) ) {
 		$layout = 'grid';
 	}
 
@@ -135,17 +137,17 @@ function twentyfourteen_sanitize_layout( $layout ) {
 }
 
 /**
- * Bind JS handlers to make Customizer preview reload changes asynchronously.
+ * Binds JS handlers to make Customizer preview reload changes asynchronously.
  *
  * @since Twenty Fourteen 1.0
  */
 function twentyfourteen_customize_preview_js() {
-	wp_enqueue_script( 'twentyfourteen_customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), '20141015', true );
+	wp_enqueue_script( 'twentyfourteen_customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), '20250217', array( 'in_footer' => true ) );
 }
 add_action( 'customize_preview_init', 'twentyfourteen_customize_preview_js' );
 
 /**
- * Add contextual help to the Themes and Post edit screens.
+ * Adds contextual help to the Themes and Post edit screens.
  *
  * @since Twenty Fourteen 1.0
  */

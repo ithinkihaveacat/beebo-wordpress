@@ -1,66 +1,60 @@
 /**
- * Colors
- */
-/**
- * Breakpoints & Media Queries
- */
-/**
- * Colors
- */
-/**
- * Often re-used variables
- */
-/**
- * Breakpoint mixins
- */
-/**
- * Long content fade mixin
+ * SCSS Variables.
  *
- * Creates a fading overlay to signify that the content is longer
- * than the space allows.
+ * Please use variables from this sheet to ensure consistency across the UI.
+ * Don't add to this sheet unless you're pretty sure the value will be reused in many places.
+ * For example, don't add rules to this sheet that affect block visuals. It's purely for UI.
  */
 /**
- * Button states and focus styles
+ * Colors
  */
 /**
- * Applies editor left position to the selector passed as argument
+ * Fonts & basic variables.
  */
 /**
- * Styles that are reused verbatim in a few places
+ * Typography
  */
 /**
- * Allows users to opt-out of animations via OS-level preferences.
+ * Grid System.
+ * https://make.wordpress.org/design/2019/10/31/proposal-a-consistent-spacing-system-for-wordpress/
  */
 /**
- * Reset default styles for JavaScript UI based pages.
- * This is a WP-admin agnostic reset
+ * Radius scale.
  */
 /**
- * Reset the WP Admin page styles for Gutenberg-like pages.
+ * Elevation scale.
  */
-.block-editor-format-toolbar__image-container-content {
-  display: flex; }
-  .block-editor-format-toolbar__image-container-content .components-button {
-    align-self: flex-end;
-    height: 30px;
-    margin-bottom: 8px;
-    margin-left: 8px;
-    padding: 0 6px; }
-
-.block-editor-format-toolbar__image-container-value {
-  margin: 7px;
-  flex-grow: 1;
-  flex-shrink: 1;
-  white-space: nowrap;
-  min-width: 150px;
-  max-width: 500px; }
-  .block-editor-format-toolbar__image-container-value.components-base-control .components-base-control__field {
-    margin-bottom: 0; }
-  .block-editor-format-toolbar__image-container-value.components-base-control .components-base-control__label {
-    display: block; }
+/**
+ * Dimensions.
+ */
+/**
+ * Mobile specific styles
+ */
+/**
+ * Editor styles.
+ */
+/**
+ * Block & Editor UI.
+ */
+/**
+ * Block paddings.
+ */
+/**
+ * React Native specific.
+ * These variables do not appear to be used anywhere else.
+ */
+.block-editor-format-toolbar__image-popover {
+  z-index: 159990;
+}
+.block-editor-format-toolbar__image-popover .block-editor-format-toolbar__image-container-content {
+  width: 260px;
+  padding: 16px;
+}
 
 .block-editor-format-toolbar__link-container-content {
-  display: flex; }
+  display: flex;
+  align-items: center;
+}
 
 .block-editor-format-toolbar__link-container-value {
   margin: 7px;
@@ -70,38 +64,22 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 150px;
-  max-width: 500px; }
-  .block-editor-format-toolbar__link-container-value.has-invalid-link {
-    color: #d94f4f; }
+  max-width: 500px;
+}
+.block-editor-format-toolbar__link-container-value.has-invalid-link {
+  color: #cc1818;
+}
 
-.components-inline-color__indicator {
-  position: absolute;
-  background: #000;
-  height: 3px;
-  width: 20px;
-  bottom: 6px;
-  right: auto;
-  left: auto;
-  margin: 0 5px; }
+.format-library__inline-color-popover [role=tabpanel] {
+  padding: 16px;
+  width: 260px;
+}
 
-.components-inline-color-popover .components-popover__content {
-  padding: 20px 18px; }
-  .components-inline-color-popover .components-popover__content .components-color-palette {
-    margin-top: 0.6rem; }
-  .components-inline-color-popover .components-popover__content .components-base-control__title {
-    display: block;
-    margin-bottom: 16px;
-    font-weight: 600;
-    color: #191e23; }
-  .components-inline-color-popover .components-popover__content .component-color-indicator {
-    vertical-align: text-bottom; }
+.block-editor-format-toolbar__language-popover .components-popover__content {
+  width: auto;
+  padding: 1rem;
+}
 
-.format-library-text-color-button {
-  position: relative; }
-
-.format-library-text-color-button__indicator {
-  height: 4px;
-  width: 20px;
-  position: absolute;
-  bottom: 6px;
-  right: 8px; }
+.block-editor-format-toolbar__math-input {
+  direction: ltr;
+}

@@ -5,22 +5,29 @@ Theme URI: https://wordpress.org/themes/twentynineteen/
 Author: the WordPress team
 Author URI: https://wordpress.org/
 Description: Our 2019 default theme is designed to show off the power of the block editor. It features custom styles for all the default blocks, and is built so that what you see in the editor looks like what you'll see on your website. Twenty Nineteen is designed to be adaptable to a wide range of websites, whether you’re running a photo blog, launching a new business, or supporting a non-profit. Featuring ample whitespace and modern sans-serif headlines paired with classic serif body text, it's built to be beautiful on all screen sizes.
-Requires at least: 4.9.6
+Tested up to: 7.0
+Requires at least: 4.7
 Requires PHP: 5.2.4
-Version: 1.5
+Version: 3.3
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: twentynineteen
-Tags: one-column, flexible-header, accessibility-ready, custom-colors, custom-menu, custom-logo, editor-style, featured-images, footer-widgets, rtl-language-support, sticky-post, threaded-comments, translation-ready
+Tags: one-column, accessibility-ready, custom-colors, custom-menu, custom-logo, editor-style, featured-images, footer-widgets, rtl-language-support, sticky-post, threaded-comments, translation-ready, block-patterns
 
 This theme, like WordPress, is licensed under the GPL.
 Use it to make something cool, have fun, and share what you've learned with others.
 
-Twenty Nineteen is based on Underscores https://underscores.me/, (C) 2012-2019 Automattic, Inc.
+Twenty Nineteen is based on Underscores https://underscores.me/, (C) 2012-2020 Automattic, Inc.
 Underscores is distributed under the terms of the GNU GPL v2 or later.
 
 Normalizing styles have been helped along thanks to the fine work of
 Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
+
+Bundled block pattern images:
+Abstract Background by HD Wallpapers, CC0. https://stocksnap.io/photo/abstract-background-0SRRVNMKBX
+Abstract Waves by HD Wallpapers, CC0. https://stocksnap.io/photo/abstract-waves-0KREGLTZQ3
+Abstract Bokeh by HD Wallpapers, CC0. https://stocksnap.io/photo/abstract-bokeh-P4KVZBMQ6L
+Colorful Bokeh by HD Wallpapers, CC0. https://stocksnap.io/photo/colorful-bokeh-VN4G84GL8H
 */
 /*--------------------------------------------------------------
 >>> TABLE OF CONTENTS:
@@ -402,6 +409,7 @@ html {
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #fff;
   color: #111;
   font-family: "Inria Sans", sans-serif;
   font-weight: 400;
@@ -660,6 +668,7 @@ a:hover {
 
 a:focus {
   text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 strong {
@@ -724,10 +733,6 @@ html {
   box-sizing: inherit;
 }
 
-body {
-  background-color: #fff;
-}
-
 a {
   transition: color 110ms ease-in-out;
   color: #0073aa;
@@ -744,6 +749,7 @@ a:focus {
   outline: thin;
   outline-style: dotted;
   text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 h1,
@@ -764,6 +770,17 @@ h2:before {
   height: 2px;
   margin: 1rem 0;
   width: 1em;
+}
+
+h1:not(.site-title).has-text-align-center:before,
+h2.has-text-align-center:before {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1:not(.site-title).has-text-align-right:before,
+h2.has-text-align-right:before {
+  margin-left: auto;
 }
 
 hr {
@@ -932,6 +949,7 @@ a:active {
 a:focus {
   outline: thin dotted;
   text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 /*--------------------------------------------------------------
@@ -990,7 +1008,7 @@ body.page .main-navigation {
 
 .main-navigation .main-menu > li {
   color: #0073aa;
-  display: inline;
+  display: inline-block;
   position: relative;
 }
 
@@ -1125,7 +1143,7 @@ body.page .main-navigation {
   line-height: 1.2;
   text-shadow: none;
   padding: calc( .5 * 1rem) calc( 24px + 1rem) calc( .5 * 1rem) 1rem;
-  white-space: nowrap;
+  max-width: 20rem;
 }
 
 .main-navigation .sub-menu > li > a:hover, .main-navigation .sub-menu > li > a:focus,
@@ -1400,7 +1418,6 @@ body.page .main-navigation {
 /* Text meant only for screen readers. */
 .screen-reader-text {
   border: 0;
-  clip: rect(1px, 1px, 1px, 1px);
   clip-path: inset(50%);
   height: 1px;
   margin: -1px;
@@ -1408,15 +1425,15 @@ body.page .main-navigation {
   padding: 0;
   position: absolute !important;
   width: 1px;
-  word-wrap: normal !important;
   /* Many screen reader and browser combinations announce broken words as they would appear visually. */
+  word-wrap: normal !important;
+  word-break: normal !important;
 }
 
 .screen-reader-text:focus {
   background-color: #f1f1f1;
   border-radius: 3px;
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
-  clip: auto !important;
   clip-path: none;
   color: #21759b;
   display: block;
@@ -1657,6 +1674,7 @@ body.page .main-navigation {
   margin: 0;
 }
 
+
 /*--------------------------------------------------------------
 ## Posts and pages
 --------------------------------------------------------------*/
@@ -1716,6 +1734,15 @@ body.page .main-navigation {
   height: 2px;
   margin: 1rem 0;
   width: 1em;
+}
+
+.entry .entry-title.has-text-align-center:before {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.entry .entry-title.has-text-align-right:before {
+  margin-left: auto;
 }
 
 .entry .entry-title a {
@@ -1906,6 +1933,7 @@ body.page .main-navigation {
 
 .entry .entry-content a {
   text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 .entry .entry-content a.button, .entry .entry-content a:hover {
@@ -2002,6 +2030,15 @@ body.page .main-navigation {
   width: 1em;
 }
 
+.author-bio .author-title.has-text-align-center:before {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.author-bio .author-title.has-text-align-right:before {
+  margin-left: auto;
+}
+
 .author-bio .author-description {
   display: inline;
   color: #767676;
@@ -2021,6 +2058,7 @@ body.page .main-navigation {
 /*--------------------------------------------------------------
 ## Comments
 --------------------------------------------------------------*/
+
 /*--------------------------------------------------------------
 ## Archives
 --------------------------------------------------------------*/
@@ -2160,6 +2198,7 @@ body.page .main-navigation {
 }
 
 /* Widgets */
+
 /* Blocks */
 /* !Block styles */
 .entry .entry-content > *,
@@ -2373,6 +2412,7 @@ body.page .main-navigation {
 }
 
 .entry .entry-content .wp-block-audio audio {
+  display: block;
   width: 100%;
 }
 
@@ -2399,6 +2439,10 @@ body.page .main-navigation {
   width: 100%;
 }
 
+.entry .entry-content .wp-block-buttons {
+  line-height: 1.2;
+}
+
 .entry .entry-content .wp-block-button .wp-block-button__link {
   transition: background 150ms ease-in-out;
   border: none;
@@ -2409,7 +2453,6 @@ body.page .main-navigation {
   font-weight: bold;
   text-decoration: none;
   padding: 0.76rem 1rem;
-  outline: none;
   outline: none;
 }
 
@@ -2427,11 +2470,19 @@ body.page .main-navigation {
   cursor: pointer;
 }
 
+.entry .entry-content .wp-block-button .wp-block-button__link:hover:not(.has-background) {
+  background: #111;
+}
+
 .entry .entry-content .wp-block-button .wp-block-button__link:focus {
   color: white;
   background: #111;
   outline: thin dotted;
   outline-offset: -4px;
+}
+
+.entry .entry-content .wp-block-button .wp-block-button__link:focus:not(.has-background) {
+  background: #111;
 }
 
 .entry .entry-content .wp-block-button:not(.is-style-squared) .wp-block-button__link {
@@ -2466,6 +2517,21 @@ body.page .main-navigation {
 
 .entry .entry-content .wp-block-button.is-style-outline .wp-block-button__link:hover:not(.has-background) {
   color: #111;
+}
+
+.entry .entry-content .wp-block-buttons.has-custom-font-size .wp-block-button__link,
+.entry .entry-content .wp-block-button.has-custom-font-size .wp-block-button__link {
+  font-size: 1em;
+}
+
+.entry .entry-content .wp-block-buttons[style*="font-weight"] .wp-block-button__link,
+.entry .entry-content .wp-block-button[style*="font-weight"] .wp-block-button__link {
+  font-weight: inherit;
+}
+
+.entry .entry-content .wp-block-buttons[style*="text-decoration"] .wp-block-button__link,
+.entry .entry-content .wp-block-button[style*="text-decoration"] .wp-block-button__link {
+  text-decoration: inherit;
 }
 
 .entry .entry-content .wp-block-archives,
@@ -2573,14 +2639,21 @@ body.page .main-navigation {
   margin: 0 0.25em 0 0;
 }
 
+@-moz-document url-prefix() {
+  .entry .entry-content .has-drop-cap:not(:focus):first-letter {
+    margin-top: 0.2em;
+  }
+}
+
 .entry .entry-content .wp-block-pullquote {
+  color: #111;
   border-color: transparent;
   border-width: 2px;
   padding: 1rem;
+  font-size: 1em;
 }
 
 .entry .entry-content .wp-block-pullquote blockquote {
-  color: #111;
   border: none;
   margin-top: calc(4 * 1rem);
   margin-bottom: calc(4.33 * 1rem);
@@ -2633,6 +2706,10 @@ body.page .main-navigation {
 
 .entry .entry-content .wp-block-pullquote.alignleft blockquote p:first-child, .entry .entry-content .wp-block-pullquote.alignright blockquote p:first-child {
   margin-top: 0;
+}
+
+.entry .entry-content .wp-block-pullquote.has-text-color cite {
+  color: inherit;
 }
 
 .entry .entry-content .wp-block-pullquote.is-style-solid-color {
@@ -2764,13 +2841,19 @@ body.page .main-navigation {
 }
 
 @media only screen and (min-width: 768px) {
-  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > img {
+  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > img,
+  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > a > img,
+  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > img + figcaption,
+  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > a + figcaption {
     max-width: calc(8 * (100vw / 12) - 28px);
   }
 }
 
 @media only screen and (min-width: 1168px) {
-  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > img {
+  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > img,
+  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > a > img,
+  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > img + figcaption,
+  .entry .entry-content .wp-block-image:not(.alignwide):not(.alignfull) > a + figcaption {
     max-width: calc(6 * (100vw / 12) - 28px);
   }
 }
@@ -2951,6 +3034,25 @@ body.page .main-navigation {
 		 * is followed by an H1, or H2 */
 }
 
+.entry .entry-content .wp-block-separator:not(.wp-block-separator),
+.entry .entry-content hr:not(.wp-block-separator) {
+  max-width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+  .entry .entry-content .wp-block-separator:not(.wp-block-separator),
+  .entry .entry-content hr:not(.wp-block-separator) {
+    max-width: calc(8 * (100vw / 12) - 28px);
+  }
+}
+
+@media only screen and (min-width: 1168px) {
+  .entry .entry-content .wp-block-separator:not(.wp-block-separator),
+  .entry .entry-content hr:not(.wp-block-separator) {
+    max-width: calc(6 * (100vw / 12) - 28px);
+  }
+}
+
 .entry .entry-content .wp-block-separator.is-style-wide,
 .entry .entry-content hr.is-style-wide {
   max-width: 100%;
@@ -3060,6 +3162,16 @@ body.page .main-navigation {
   outline-offset: -4px;
 }
 
+.entry .entry-content .wp-block-file.aligncenter .wp-block-file__button {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.entry .entry-content .wp-block-file.alignright .wp-block-file__button {
+  margin-left: auto;
+  margin-right: 0;
+}
+
 .entry .entry-content .wp-block-code {
   border-radius: 0;
 }
@@ -3079,6 +3191,8 @@ body.page .main-navigation {
 }
 
 @media only screen and (min-width: 768px) {
+  .entry .entry-content .wp-block-columns .wp-block-image:not(.alignwide):not(.alignfull) > img,
+  .entry .entry-content .wp-block-columns .wp-block-image:not(.alignwide):not(.alignfull) > a > img,
   .entry .entry-content .wp-block-columns .wp-block-image > img:not(.alignwide):not(.alignfull),
   .entry .entry-content .wp-block-columns .wp-block-image > figure {
     max-width: 100%;
@@ -3086,6 +3200,8 @@ body.page .main-navigation {
 }
 
 @media only screen and (min-width: 1168px) {
+  .entry .entry-content .wp-block-columns .wp-block-image:not(.alignwide):not(.alignfull) > img,
+  .entry .entry-content .wp-block-columns .wp-block-image:not(.alignwide):not(.alignfull) > a > img,
   .entry .entry-content .wp-block-columns .wp-block-image > img:not(.alignwide):not(.alignfull),
   .entry .entry-content .wp-block-columns .wp-block-image > figure {
     max-width: 100%;
@@ -3219,9 +3335,7 @@ object {
 .avatar {
   border-radius: 100%;
   display: block;
-  height: calc(2.25 * 1rem);
   min-height: inherit;
-  width: calc(2.25 * 1rem);
 }
 
 svg {

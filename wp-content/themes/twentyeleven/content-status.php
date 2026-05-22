@@ -4,7 +4,7 @@
  *
  * Used on index and archive pages
  *
- * @link https://wordpress.org/support/article/post-formats/
+ * @link https://developer.wordpress.org/advanced-administration/wordpress/post-formats/
  *
  * @package WordPress
  * @subpackage Twenty_Eleven
@@ -35,7 +35,7 @@
 			<div class="avatar">
 				<?php
 				/**
-				 * Filter the Twenty Eleven status avatar size.
+				 * Filters the Twenty Eleven status avatar size.
 				 *
 				 * @since Twenty Eleven 1.0
 				 *

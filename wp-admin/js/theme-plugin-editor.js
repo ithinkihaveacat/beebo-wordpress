@@ -2,7 +2,9 @@
  * @output wp-admin/js/theme-plugin-editor.js
  */
 
-/* eslint no-magic-numbers: ["error", { "ignore": [-1, 0, 1] }] */
+/* eslint-env es2020 */
+
+/* eslint no-magic-numbers: ["error", { "ignore": [-1, 0, 1, 9, 1000] }] */
 
 if ( ! window.wp ) {
 	window.wp = {};
@@ -10,17 +12,10 @@ if ( ! window.wp ) {
 
 wp.themePluginEditor = (function( $ ) {
 	'use strict';
-	var component, TreeLinks;
+	var component, TreeLinks,
+		__ = wp.i18n.__, _n = wp.i18n._n, sprintf = wp.i18n.sprintf;
 
 	component = {
-		l10n: {
-			lintError: {
-				singular: '',
-				plural: ''
-			},
-			saveAlert: '',
-			saveError: ''
-		},
 		codeEditor: {},
 		instance: null,
 		noticeElements: {},
@@ -34,8 +29,8 @@ wp.themePluginEditor = (function( $ ) {
 	 * @since 4.9.0
 	 *
 	 * @param {jQuery}         form - Form element.
-	 * @param {object}         settings - Settings.
-	 * @param {object|boolean} settings.codeEditor - Code editor settings (or `false` if syntax highlighting is disabled).
+	 * @param {Object}         settings - Settings.
+	 * @param {Object|boolean} settings.codeEditor - Code editor settings (or `false` if syntax highlighting is disabled).
 	 * @return {void}
 	 */
 	component.init = function init( form, settings ) {
@@ -75,7 +70,7 @@ wp.themePluginEditor = (function( $ ) {
 
 		$( window ).on( 'beforeunload', function() {
 			if ( component.dirty ) {
-				return component.l10n.saveAlert;
+				return __( 'The changes you made will be lost if you navigate away from this page.' );
 			}
 			return undefined;
 		} );
@@ -86,6 +81,18 @@ wp.themePluginEditor = (function( $ ) {
 				component.docsLookUpButton.prop( 'disabled', true );
 			} else {
 				component.docsLookUpButton.prop( 'disabled', false );
+			}
+		} );
+
+		// Initiate saving the file when not focused in CodeMirror or when the user has syntax highlighting turned off.
+		$( window ).on( 'keydown', function( event ) {
+			if (
+				( event.ctrlKey || event.metaKey ) &&
+				( 's' === event.key.toLowerCase() ) &&
+				( ! component.instance || ! component.instance.codemirror.hasFocus() )
+			) {
+				event.preventDefault();
+				component.form.trigger( 'submit' );
 			}
 		} );
 	};
@@ -108,7 +115,7 @@ wp.themePluginEditor = (function( $ ) {
 		// Reveal the modal and set focus on the go back button.
 		component.warning
 			.removeClass( 'hidden' )
-			.find( '.file-editor-warning-go-back' ).focus();
+			.find( '.file-editor-warning-go-back' ).trigger( 'focus' );
 		// Get the links and buttons within the modal.
 		component.warningTabbables = component.warning.find( 'a, button' );
 		// Attach event handlers.
@@ -124,7 +131,7 @@ wp.themePluginEditor = (function( $ ) {
 	 * Constrain tabbing within the warning modal.
 	 *
 	 * @since 4.9.0
-	 * @param {object} event jQuery event object.
+	 * @param {Object} event jQuery event object.
 	 * @return {void}
 	 */
 	component.constrainTabbing = function( event ) {
@@ -198,7 +205,11 @@ wp.themePluginEditor = (function( $ ) {
 			return;
 		}
 
-		// Scroll ot the line that has the error.
+		if ( component.instance && component.instance.updateErrorNotice ) {
+			component.instance.updateErrorNotice();
+		}
+
+		// Scroll to the line that has the error.
 		if ( component.lintErrors.length ) {
 			component.instance.codemirror.setCursor( component.lintErrors[0].from.line );
 			return;
@@ -233,7 +244,7 @@ wp.themePluginEditor = (function( $ ) {
 			var notice = $.extend(
 				{
 					code: 'save_error',
-					message: component.l10n.saveError
+					message: __( 'An error occurred while saving your changes. Please try again. If the problem persists, you may need to manually update the file via FTP.' )
 				},
 				response,
 				{
@@ -261,7 +272,7 @@ wp.themePluginEditor = (function( $ ) {
 	 *
 	 * @since 4.9.0
 	 *
-	 * @param {object}   notice - Notice.
+	 * @param {Object}   notice - Notice.
 	 * @param {string}   notice.code - Code.
 	 * @param {string}   notice.type - Type.
 	 * @param {string}   notice.message - Message.
@@ -335,7 +346,7 @@ wp.themePluginEditor = (function( $ ) {
 		 * @return {void}
 		 */
 		codeEditorSettings.onTabPrevious = function() {
-			$( '#templateside' ).find( ':tabbable' ).last().focus();
+			$( '#templateside' ).find( ':tabbable' ).last().trigger( 'focus' );
 		};
 
 		/**
@@ -346,7 +357,7 @@ wp.themePluginEditor = (function( $ ) {
 		 * @return {void}
 		 */
 		codeEditorSettings.onTabNext = function() {
-			$( '#template' ).find( ':tabbable:not(.CodeMirror-code)' ).first().focus();
+			$( '#template' ).find( ':tabbable:not(.CodeMirror-code)' ).first().trigger( 'focus' );
 		};
 
 		/**
@@ -375,20 +386,23 @@ wp.themePluginEditor = (function( $ ) {
 		 * @return {void}
 		 */
 		codeEditorSettings.onUpdateErrorNotice = function onUpdateErrorNotice( errorAnnotations ) {
-			var message, noticeElement;
+			var noticeElement;
 
 			component.submitButton.toggleClass( 'disabled', errorAnnotations.length > 0 );
 
 			if ( 0 !== errorAnnotations.length ) {
-				if ( 1 === errorAnnotations.length ) {
-					message = component.l10n.lintError.singular.replace( '%d', '1' );
-				} else {
-					message = component.l10n.lintError.plural.replace( '%d', String( errorAnnotations.length ) );
-				}
 				noticeElement = component.addNotice({
 					code: 'lint_errors',
 					type: 'error',
-					message: message,
+					message: sprintf(
+						/* translators: %s: Error count. */
+						_n(
+							'There is %s error which must be fixed before you can update this file.',
+							'There are %s errors which must be fixed before you can update this file.',
+							errorAnnotations.length
+						),
+						String( errorAnnotations.length )
+					),
 					dismissible: false
 				});
 				noticeElement.find( 'input[type=checkbox]' ).on( 'click', function() {
@@ -402,6 +416,16 @@ wp.themePluginEditor = (function( $ ) {
 
 		editor = wp.codeEditor.initialize( $( '#newcontent' ), codeEditorSettings );
 		editor.codemirror.on( 'change', component.onChange );
+
+		function onSaveShortcut() {
+			component.form.trigger( 'submit' );
+		}
+
+		editor.codemirror.setOption( 'extraKeys', {
+			...( editor.codemirror.getOption( 'extraKeys' ) || {} ),
+			'Ctrl-S': onSaveShortcut,
+			'Cmd-S': onSaveShortcut,
+		} );
 
 		// Improve the editor accessibility.
 		$( editor.codemirror.display.lineDiv )
@@ -1004,3 +1028,27 @@ wp.themePluginEditor = (function( $ ) {
 
 	return component;
 })( jQuery );
+
+/**
+ * Removed in 5.5.0, needed for back-compatibility.
+ *
+ * @since 4.9.0
+ * @deprecated 5.5.0
+ *
+ * @type {object}
+ */
+wp.themePluginEditor.l10n = wp.themePluginEditor.l10n || {
+	saveAlert: '',
+	saveError: '',
+	lintError: {
+		alternative: 'wp.i18n',
+		func: function() {
+			return {
+				singular: '',
+				plural: ''
+			};
+		}
+	}
+};
+
+wp.themePluginEditor.l10n = window.wp.deprecateL10nObject( 'wp.themePluginEditor.l10n', wp.themePluginEditor.l10n, '5.5.0' );

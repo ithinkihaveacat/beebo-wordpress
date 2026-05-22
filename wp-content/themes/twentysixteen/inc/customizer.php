@@ -19,19 +19,19 @@ function twentysixteen_custom_header_and_background() {
 	$default_background_color = trim( $color_scheme[0], '#' );
 	$default_text_color       = trim( $color_scheme[3], '#' );
 
-	/**
-	 * Filter the arguments used when adding 'custom-background' support in Twenty Sixteen.
-	 *
-	 * @since Twenty Sixteen 1.0
-	 *
-	 * @param array $args {
-	 *     An array of custom-background support arguments.
-	 *
-	 *     @type string $default-color Default color of the background.
-	 * }
-	 */
 	add_theme_support(
 		'custom-background',
+		/**
+		 * Filters the arguments used when adding 'custom-background' support in Twenty Sixteen.
+		 *
+		 * @since Twenty Sixteen 1.0
+		 *
+		 * @param array $args {
+		 *     An array of custom-background support arguments.
+		 *
+		 *     @type string $default-color Default color of the background.
+		 * }
+		 */
 		apply_filters(
 			'twentysixteen_custom_background_args',
 			array(
@@ -40,24 +40,24 @@ function twentysixteen_custom_header_and_background() {
 		)
 	);
 
-	/**
-	 * Filter the arguments used when adding 'custom-header' support in Twenty Sixteen.
-	 *
-	 * @since Twenty Sixteen 1.0
-	 *
-	 * @param array $args {
-	 *     An array of custom-header support arguments.
-	 *
-	 *     @type string $default-text-color Default color of the header text.
-	 *     @type int      $width            Width in pixels of the custom header image. Default 1200.
-	 *     @type int      $height           Height in pixels of the custom header image. Default 280.
-	 *     @type bool     $flex-height      Whether to allow flexible-height header images. Default true.
-	 *     @type callable $wp-head-callback Callback function used to style the header image and text
-	 *                                      displayed on the blog.
-	 * }
-	 */
 	add_theme_support(
 		'custom-header',
+		/**
+		 * Filters the arguments used when adding 'custom-header' support in Twenty Sixteen.
+		 *
+		 * @since Twenty Sixteen 1.0
+		 *
+		 * @param array $args {
+		 *     An array of custom-header support arguments.
+		 *
+		 *     @type string   $default-text-color Default color of the header text.
+		 *     @type int      $width              Width in pixels of the custom header image. Default 1200.
+		 *     @type int      $height             Height in pixels of the custom header image. Default 280.
+		 *     @type bool     $flex-height        Whether to allow flexible-height header images. Default true.
+		 *     @type callable $wp-head-callback   Callback function used to style the header image and text
+		 *                                        displayed on the blog.
+		 * }
+		 */
 		apply_filters(
 			'twentysixteen_custom_header_args',
 			array(
@@ -90,14 +90,14 @@ if ( ! function_exists( 'twentysixteen_header_style' ) ) :
 
 		// If the header text has been hidden.
 		?>
-		<style type="text/css" id="twentysixteen-header-css">
+		<style id="twentysixteen-header-css">
 		.site-branding {
 			margin: 0 auto 0 0;
 		}
 
 		.site-branding .site-title,
 		.site-description {
-			clip: rect(1px, 1px, 1px, 1px);
+			clip-path: inset(50%);
 			position: absolute;
 		}
 		</style>
@@ -248,9 +248,10 @@ function twentysixteen_customize_register( $wp_customize ) {
 add_action( 'customize_register', 'twentysixteen_customize_register', 11 );
 
 /**
- * Render the site title for the selective refresh partial.
+ * Renders the site title for the selective refresh partial.
  *
  * @since Twenty Sixteen 1.2
+ *
  * @see twentysixteen_customize_register()
  *
  * @return void
@@ -260,9 +261,10 @@ function twentysixteen_customize_partial_blogname() {
 }
 
 /**
- * Render the site tagline for the selective refresh partial.
+ * Renders the site tagline for the selective refresh partial.
  *
  * @since Twenty Sixteen 1.2
+ *
  * @see twentysixteen_customize_register()
  *
  * @return void
@@ -289,7 +291,7 @@ function twentysixteen_customize_partial_blogdescription() {
  */
 function twentysixteen_get_color_schemes() {
 	/**
-	 * Filter the color schemes registered for use with Twenty Sixteen.
+	 * Filters the color schemes registered for use with Twenty Sixteen.
 	 *
 	 * The default schemes include 'default', 'dark', 'gray', 'red', and 'yellow'.
 	 *
@@ -484,7 +486,7 @@ add_action( 'wp_enqueue_scripts', 'twentysixteen_color_scheme_css' );
  * @since Twenty Sixteen 1.0
  */
 function twentysixteen_customize_control_js() {
-	wp_enqueue_script( 'color-scheme-control', get_template_directory_uri() . '/js/color-scheme-control.js', array( 'customize-controls', 'iris', 'underscore', 'wp-util' ), '20170530', true );
+	wp_enqueue_script( 'color-scheme-control', get_template_directory_uri() . '/js/color-scheme-control.js', array( 'customize-controls', 'iris', 'underscore', 'wp-util' ), '20170530', array( 'in_footer' => true ) );
 	wp_localize_script( 'color-scheme-control', 'colorScheme', twentysixteen_get_color_schemes() );
 }
 add_action( 'customize_controls_enqueue_scripts', 'twentysixteen_customize_control_js' );
@@ -495,7 +497,7 @@ add_action( 'customize_controls_enqueue_scripts', 'twentysixteen_customize_contr
  * @since Twenty Sixteen 1.0
  */
 function twentysixteen_customize_preview_js() {
-	wp_enqueue_script( 'twentysixteen-customize-preview', get_template_directory_uri() . '/js/customize-preview.js', array( 'customize-preview' ), '20170530', true );
+	wp_enqueue_script( 'twentysixteen-customize-preview', get_template_directory_uri() . '/js/customize-preview.js', array( 'customize-preview' ), '20260105', array( 'in_footer' => true ) );
 }
 add_action( 'customize_preview_init', 'twentysixteen_customize_preview_js' );
 
@@ -789,13 +791,11 @@ function twentysixteen_get_color_scheme_css( $colors ) {
 	.comment-reply-link,
 	.no-comments,
 	.widecolumn .mu_register .mu_alert {
-		border-color: {$colors['main_text_color']}; /* Fallback for IE7 and IE8 */
 		border-color: {$colors['border_color']};
 	}
 
 	hr,
 	code {
-		background-color: {$colors['main_text_color']}; /* Fallback for IE7 and IE8 */
 		background-color: {$colors['border_color']};
 	}
 
@@ -836,6 +836,7 @@ CSS;
  * Customizer preview.
  *
  * @since Twenty Sixteen 1.0
+ * @since Twenty Sixteen 4.1 Added `wp_print_inline_script_tag()` support.
  */
 function twentysixteen_color_scheme_css_template() {
 	$colors = array(
@@ -846,11 +847,20 @@ function twentysixteen_color_scheme_css_template() {
 		'secondary_text_color'  => '{{ data.secondary_text_color }}',
 		'border_color'          => '{{ data.border_color }}',
 	);
-	?>
-	<script type="text/html" id="tmpl-twentysixteen-color-scheme">
-		<?php echo twentysixteen_get_color_scheme_css( $colors ); ?>
-	</script>
-	<?php
+
+	$css_template = twentysixteen_get_color_scheme_css( $colors );
+
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag(
+			$css_template,
+			array(
+				'type' => 'text/html',
+				'id'   => 'tmpl-twentysixteen-color-scheme',
+			)
+		);
+	} else {
+		echo '<script type="text/html" id="tmpl-twentysixteen-color-scheme">' . $css_template . '</script>';
+	}
 }
 add_action( 'customize_controls_print_footer_scripts', 'twentysixteen_color_scheme_css_template' );
 
@@ -1077,7 +1087,7 @@ function twentysixteen_main_text_color_css() {
 		.comment-author,
 		.comment-reply-title small a:hover,
 		.comment-reply-title small a:focus {
-			color: %1$s
+			color: %1$s;
 		}
 
 		blockquote,
@@ -1157,13 +1167,11 @@ function twentysixteen_main_text_color_css() {
 		.comment-reply-link,
 		.no-comments,
 		.widecolumn .mu_register .mu_alert {
-			border-color: %1$s; /* Fallback for IE7 and IE8 */
 			border-color: %2$s;
 		}
 
 		hr,
 		code {
-			background-color: %1$s; /* Fallback for IE7 and IE8 */
 			background-color: %2$s;
 		}
 
